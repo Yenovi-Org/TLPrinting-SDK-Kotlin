@@ -53,6 +53,7 @@ class TLPrintingClient(
          */
         private fun getHttpClient(apiKey: String): HttpClient =
             HttpClient(CIO) {
+                expectSuccess = true
                 install(Auth) {
                     bearer {
                         loadTokens {
