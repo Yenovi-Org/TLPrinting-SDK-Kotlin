@@ -8,7 +8,7 @@ enum class PrintCodeLanguage(val languageId: String) {
 }
 
 data class PrintCodeConfiguration(
-    val language: PrintCodeLanguage = PrintCodeLanguage.TSPL,
+    val language: PrintCodeLanguage,
     val copies: Int,
     /**
      * Space between rows in mm
