@@ -127,7 +127,7 @@ val code: ByteArray = client.getLabelPrintCode(
 
 | Option | Type | Description |
 | --- | --- | --- |
-| `language` | `PrintCodeLanguage` | `TSPL` (default) or `ZPL` |
+| `language` | `PrintCodeLanguage` | `TSPL` or `ZPL` (required) |
 | `copies` | `Int` | Number of labels to print (required) |
 | `rowGap` | `Double?` | Space between rows in mm |
 | `dpi` | `Double?` | DPI to configure the printer to |
