@@ -4,7 +4,8 @@ import kotlin.collections.component1
 import kotlin.collections.component2
 
 enum class PrintCodeLanguage(val languageId: String) {
-    TSPL("tspl")
+    TSPL("tspl"),
+    ZPL("zpl"),
 }
 
 data class PrintCodeConfiguration(
