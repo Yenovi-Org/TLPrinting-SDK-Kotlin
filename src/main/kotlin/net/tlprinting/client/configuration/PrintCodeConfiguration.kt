@@ -1,7 +1,9 @@
 package net.tlprinting.client.configuration
 
-import kotlin.collections.component1
-import kotlin.collections.component2
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
+import kotlinx.serialization.json.putJsonObject
 
 enum class PrintCodeLanguage(val languageId: String) {
     TSPL("tspl"),
@@ -26,15 +28,18 @@ data class PrintCodeConfiguration(
      */
     val variables: Map<String, String>? = null,
 ) {
-    val params: Map<String, String>
-        get() = buildMap {
-            put("copies", copies.toString())
-
-            rowGap?.let { put("rowGap", it.toString()) }
-            dpi?.let { put("dpi", it.toString()) }
-
-            variables?.forEach { (key, value) ->
-                put("var_$key", value)
+    /**
+     * JSON body sent to the print code endpoint
+     */
+    val body: JsonObject
+        get() = buildJsonObject {
+            put("copies", copies)
+            rowGap?.let { put("rowGap", it) }
+            dpi?.let { put("dpi", it) }
+            variables?.let { vars ->
+                putJsonObject("variables") {
+                    vars.forEach { (key, value) -> put(key, value) }
+                }
             }
         }
 }

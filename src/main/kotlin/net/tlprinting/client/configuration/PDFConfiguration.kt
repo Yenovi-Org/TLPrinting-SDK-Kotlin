@@ -1,5 +1,10 @@
 package net.tlprinting.client.configuration
 
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
+import kotlinx.serialization.json.putJsonObject
+
 enum class PageSize(val id: String) {
     LABEL("label"),
     CUSTOM("custom"),
@@ -46,20 +51,23 @@ data class PDFConfiguration(
      */
     val variables: Map<String, String>? = null,
 ) {
-    val params: Map<String, String>
-        get() = buildMap {
+    /**
+     * JSON body sent to the PDF endpoint
+     */
+    val body: JsonObject
+        get() = buildJsonObject {
             put("pageSize", pageSize.name)
-            put("copies", copies.toString())
-
-            marginX?.let { put("marginX", it.toString()) }
-            marginY?.let { put("marginY", it.toString()) }
-            columnGap?.let { put("columnGap", it.toString()) }
-            rowGap?.let { put("rowGap", it.toString()) }
-            pageHeight?.let { put("pageHeight", it.toString()) }
-            pageWidth?.let { put("pageWidth", it.toString()) }
-
-            variables?.forEach { (key, value) ->
-                put("var_$key", value)
+            put("copies", copies)
+            marginX?.let { put("marginX", it) }
+            marginY?.let { put("marginY", it) }
+            columnGap?.let { put("columnGap", it) }
+            rowGap?.let { put("rowGap", it) }
+            pageHeight?.let { put("pageHeight", it) }
+            pageWidth?.let { put("pageWidth", it) }
+            variables?.let { vars ->
+                putJsonObject("variables") {
+                    vars.forEach { (key, value) -> put(key, value) }
+                }
             }
         }
 }
