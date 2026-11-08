@@ -9,11 +9,14 @@ import io.ktor.client.plugins.auth.providers.bearer
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.get
+import io.ktor.client.request.post
+import io.ktor.client.request.setBody
+import io.ktor.http.ContentType
+import io.ktor.http.contentType
 import io.ktor.http.URLBuilder
 import io.ktor.http.appendPathSegments
 import io.ktor.http.takeFrom
 import io.ktor.serialization.kotlinx.json.json
-import io.ktor.util.appendAll
 import net.tlprinting.client.model.Label
 import net.tlprinting.client.configuration.PDFConfiguration
 import net.tlprinting.client.configuration.PrintCodeConfiguration
@@ -96,11 +99,11 @@ class TLPrintingClient(
      * Get the generated PDF for a label
      */
     suspend fun getLabelPDF(labelId: String, config: PDFConfiguration): ByteArray {
-        return client.get {
-            tlPrintingUrl(LABELS_PATH, labelId, PDF_PATH) {
-                headers.append("Accept", "application/pdf")
-                parameters.appendAll(config.params)
-            }
+        return client.post {
+            tlPrintingUrl(LABELS_PATH, labelId, PDF_PATH)
+            headers.append("Accept", "application/pdf")
+            contentType(ContentType.Application.Json)
+            setBody(config.body)
         }.body()
     }
 
@@ -108,10 +111,10 @@ class TLPrintingClient(
      * Generate raw print code bytes for the label
      */
     suspend fun getLabelPrintCode(labelId: String, config: PrintCodeConfiguration): ByteArray {
-        return client.get {
-            tlPrintingUrl(LABELS_PATH, labelId, PRINTCODE_PATH, config.language.languageId) {
-                parameters.appendAll(config.params)
-            }
+        return client.post {
+            tlPrintingUrl(LABELS_PATH, labelId, PRINTCODE_PATH, config.language.languageId)
+            contentType(ContentType.Application.Json)
+            setBody(config.body)
         }.body()
     }
 
